@@ -191,7 +191,12 @@ highlight default link ClosedEntry Comment
 highlight default link HashCommentLine Comment
 highlight default link HashCommentLineEmpty Warning
 
-highlight default link LineContinuation Warning
+if $VIM_THEME =~ "nord"
+highlight link LineContinuation XtermRed3
+highlight link HashCommentLineEmpty XtermOrangeRed1
+else
+highlight default link LineContinuation WarningSign
+endif
 
 highlight default link ListDirective PreProc
 "highlight default link @ListDirType SpecialKey
