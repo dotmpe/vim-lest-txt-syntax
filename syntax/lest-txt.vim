@@ -134,9 +134,22 @@ syntax match QuotedDouble '\s*\zs"[^"]*"' contained
 syntax match QuotedDouble3 '\s*\zs"""[^"]*"""' contained
 
 syntax match LineContinuation '\\$'
+" XXX: for C-mode preprocessed data may be...
+syntax match LineContinuation '\\\\$'
+
+syntax match HashOutlineLineEmpty '^#!\+ *$'
+if allow_empty_comments
+  syntax match HashOutlineLine '^#!\+ \( .\+\)\?$' contains=@PlainTag,HashTag,ProjectTag,ClassTag
+else
+  syntax match HashOutlineLine '^#!\+ .\+$' contains=@PlainTag,HashTag,ProjectTag,ClassTag
+endif
+
+syntax match ShebangLine '^#\![^ ].\+$'
+
+syntax match HashDirectiveLine '^#[^A-Za-z_ ][A-Za-z_]\+.*$'
 
 " Directives always at start of line, and are not comments
-syntax match ListDirective '^#[^ #]\+.*$' contains=@ListDirType,ListDirArgument
+syntax match HashKeywordDirectiveLine '^#[A-Za-z_]\+.*$' contains=@ListDirType,ListDirArgument
 
 syntax cluster ListDirType contains=ListDirTypeIncl,ListDirTypeCols,ListDirTypeSch
 
@@ -188,17 +201,22 @@ sy match ListStatPunct    '[:,\.+-]' contained
 
 highlight default link CommentEntry Comment
 highlight default link ClosedEntry Comment
+highlight default link ShebangLine Decorator
+highlight default link HashOutlineLine Decorator
 highlight default link HashCommentLine Comment
 highlight default link HashCommentLineEmpty Warning
+highlight default link HashOutlineLineEmpty Warning
+highlight default link HashDirectiveLine Macro
+highlight default link HashKeywordDirectiveLine PreProc
 
 if $VIM_THEME =~ "nord"
 highlight link LineContinuation XtermRed3
 highlight link HashCommentLineEmpty XtermOrangeRed1
+highlight link HashOutlineLineEmpty XtermOrangeRed1
 else
 highlight default link LineContinuation WarningSign
 endif
 
-highlight default link ListDirective PreProc
 "highlight default link @ListDirType SpecialKey
 highlight default link ListDirTypeCols SpecialKey
 highlight default link ListDirTypeIncl SpecialKey
